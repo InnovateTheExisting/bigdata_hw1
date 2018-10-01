@@ -23,8 +23,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class WordCount {
 
-    public static class Map
-            extends Mapper<LongWritable, Text, Text, IntWritable> {
+    public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text(); // type of output key
@@ -38,8 +37,7 @@ public class WordCount {
         }
     }
 
-    public static class Reduce
-            extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 
         private IntWritable result = new IntWritable();
 
