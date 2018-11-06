@@ -17,7 +17,7 @@ public class Top10 {
         private Text mapOutValue = new Text();
 
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            String[] data = value.toString().split("\\t");
+            String[] data = value.toString().split("\t");
             mapOutValue.set(data[0]);
             String[] friends = data[1].split(",");
             mapOutKey.set((long) friends.length);
@@ -30,7 +30,7 @@ public class Top10 {
 
         protected void reduce(LongWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             for (Text value : values) {
-                if (count < 100) {
+                if (count < 10) {
                     // reduce output top 10
                     context.write(value, key);
                     count++;

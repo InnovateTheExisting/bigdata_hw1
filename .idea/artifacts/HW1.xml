@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="HW1">
+    <output-path>$PROJECT_DIR$/out/artifacts/HW1</output-path>
+    <root id="archive" name="HW1.jar">
+      <element id="library" level="project" name="hadoop" />
+      <element id="module-output" name="homework1" />
+    </root>
+  </artifact>
+</component>

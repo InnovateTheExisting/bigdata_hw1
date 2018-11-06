@@ -100,7 +100,7 @@ public class MinAge {
         private KeyPair mapOutKey = new KeyPair();
 
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            String[] data = value.toString().split("\\t");
+            String[] data = value.toString().split("\t");
             mapOutKey.setData("B:" + data[0]);
 
             if (data.length != 2)
@@ -174,7 +174,7 @@ public class MinAge {
         private Text mapOutValue = new Text();
 
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            String[] data = value.toString().split("\\t");
+            String[] data = value.toString().split("\t");
             mapOutKey.set(data[0]);
             mapOutValue.set(data[1]);
             context.write(mapOutKey, mapOutValue);
@@ -258,22 +258,18 @@ public class MinAge {
             MultipleInputs.addInputPath(job1, new Path(socFilePath), TextInputFormat.class, FriendListMap.class);
             FileOutputFormat.setOutputPath(job1, new Path(minAgeOutputPath));
 
-            if (job1.waitForCompletion(true)) {
-                System.out.println("success.");
+            if (job1.waitForCompletion(false)) {
+                System.out.println("job1 success.");
             } else {
-                System.out.println("failed.");
-            }
-
-            if (!job1.waitForCompletion(true))
+                System.out.println("job1 failed.");
                 System.exit(1);
-
-            System.exit(job1.waitForCompletion(true) ? 0 : 1);
+            }
         }
 
         // job2 find top 10 minimum age
         {
             config = new Configuration();
-            Job job2 = Job.getInstance(config, "TOP10MinAge");
+            Job job2 = Job.getInstance(config, "MinAge");
 
             job2.setJarByClass(MinAge.class);
             job2.setMapperClass(SwapUserAgeMap.class);
@@ -285,19 +281,17 @@ public class MinAge {
             job2.setOutputValueClass(LongWritable.class);
 
             // sort map key in descending order
-            job2.setSortComparatorClass(LongWritable.DecreasingComparator.class);
+//            job2.setSortComparatorClass(LongWritable.DecreasingComparator.class);
 
             FileInputFormat.addInputPath(job2, new Path(minAgeOutputPath));
             FileOutputFormat.setOutputPath(job2, new Path(top10MinAgeOutputPath));
 
-            if (job2.waitForCompletion(true)) {
-                System.out.println("success");
+            if (job2.waitForCompletion(false)) {
+                System.out.println("job2 success");
             } else {
-                System.out.println("fail");
-            }
-
-            if (!job2.waitForCompletion(true))
+                System.out.println("job2 fail");
                 System.exit(1);
+            }
         }
 
         // job3 find the final result, including name, address, minimum age of friend
@@ -319,14 +313,14 @@ public class MinAge {
             MultipleInputs.addInputPath(job3, new Path(userFilePath), TextInputFormat.class, AddressMap.class);
             FileOutputFormat.setOutputPath(job3, new Path(outputPath));
 
-            if (job3.waitForCompletion(true)) {
+            if (job3.waitForCompletion(false)) {
                 Utils.printFileContent(config, outputPath + "/part-r-00000");
-                System.out.println("success");
+                System.out.println("job3 success");
+                System.exit(0);
             } else {
-                System.out.println("fail");
+                System.out.println("job3 fail");
+                System.exit(1);
             }
-
-            System.exit(job3.waitForCompletion(true) ? 0 : 1);
         }
     }
 }

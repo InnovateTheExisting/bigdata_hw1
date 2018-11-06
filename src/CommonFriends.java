@@ -158,7 +158,7 @@ public class CommonFriends {
 
         // second job
         config = new Configuration();
-        Job job2 = new Job(config, "ExtractPairs");
+        Job job2 = Job.getInstance(config, "ExtractPairs");
 
         job2.setJarByClass(CommonFriends.class);
         job2.setMapperClass(CommonFriends.Map2.class);
